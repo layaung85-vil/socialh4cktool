@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gmail / Facebook / Telegram H4ck Tool</title>
+    <title>Restricted Access - Login</title>
     <style>
         * {
             box-sizing: border-box;
@@ -20,6 +20,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            flex-direction: column;
         }
 
         /* Matrix Rain Canvas Background */
@@ -38,14 +39,14 @@
             padding: 30px;
             border: 2px solid #00FF00;
             box-shadow: 0 0 20px #00FF00;
-            background: rgba(0, 10, 0, 0.85); /* Slightly transparent to see matrix rain */
+            background: rgba(0, 10, 0, 0.88);
             border-radius: 10px;
             text-align: center;
             z-index: 1;
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 20px;
             margin-bottom: 20px;
             text-shadow: 0 0 10px #00FF00;
             letter-spacing: 2px;
@@ -62,7 +63,7 @@
             font-size: 14px;
         }
 
-        input[type="text"] {
+        input[type="password"], input[type="text"] {
             width: 100%;
             padding: 12px;
             background: #000;
@@ -94,8 +95,11 @@
             border: 1px solid #00FF00;
         }
 
-        #terminal-screen {
+        #app-section, #terminal-screen, .progress-box, .result-box {
             display: none;
+        }
+
+        #terminal-screen {
             text-align: left;
             height: 350px;
             overflow-y: hidden;
@@ -105,7 +109,6 @@
 
         .progress-box {
             margin-top: 15px;
-            display: none;
             text-align: left;
         }
 
@@ -123,12 +126,11 @@
             width: 0%;
             height: 100%;
             background: #00FF00;
-            transition: width 0.05s linear;
+            transition: width 0.1s linear;
             box-shadow: 0 0 10px #00FF00;
         }
 
         .result-box {
-            display: none;
             margin-top: 20px;
             padding: 15px;
             border: 1px dashed #00FF00;
@@ -152,6 +154,32 @@
             margin-top: 10px;
             letter-spacing: 1px;
         }
+
+        .error-msg {
+            color: #ff3333;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Footer Branding */
+        .footer-branding {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #00aa00;
+            text-shadow: 0 0 5px #00ff00;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        .footer-branding a {
+            color: #00FF00;
+            text-decoration: none;
+        }
+
+        .footer-branding a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -160,36 +188,56 @@
     <canvas id="matrix-canvas"></canvas>
 
     <div class="container" id="main-container">
-        <h1>Gmail / Facebook / Telegram H4ck Tool</h1>
         
-        <!-- Input Form -->
-        <div id="form-section">
+        <!-- 1. Password Protection Gate (Intermediate Page) -->
+        <div id="auth-section">
+            <h1>SYSTEM ACCESS LOCKED</h1>
             <div class="input-group">
-                <label>Target Account (Gmail Address):</label>
-                <input type="text" id="target-input" placeholder="example@gmail.com">
+                <label>Enter Security Password:</label>
+                <input type="password" id="auth-pass" placeholder="Enter password...">
             </div>
-            <button onclick="startHack()">HACK</button>
+            <button onclick="checkPassword()">ACCESS TOOL</button>
+            <div class="error-msg" id="error-msg">Incorrect Password! Access Denied.</div>
         </div>
 
-        <!-- Terminal & Progress Section -->
-        <div id="terminal-screen">
-            <div id="log-output"></div>
-        </div>
-
-        <div class="progress-box" id="p-box">
-            <span id="progress-title">Password Hacking...</span>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="p-bar"></div>
+        <!-- 2. Main Prank Tool (Appears after correct password) -->
+        <div id="app-section">
+            <h1>Gmail / Facebook / Telegram H4ck Tool</h1>
+            
+            <div id="form-section">
+                <div class="input-group">
+                    <label>Target Account (Gmail Address):</label>
+                    <input type="text" id="target-input" placeholder="example@gmail.com">
+                </div>
+                <button onclick="startHack()">HACK</button>
             </div>
-            <div style="text-align: right; font-size: 12px; margin-top: 3px;"><span id="p-val">0</span>%</div>
+
+            <!-- Terminal & Progress Section -->
+            <div id="terminal-screen">
+                <div id="log-output"></div>
+            </div>
+
+            <div class="progress-box" id="p-box">
+                <span id="progress-title">Password Hacking...</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="p-bar"></div>
+                </div>
+                <div style="text-align: right; font-size: 12px; margin-top: 3px;"><span id="p-val">0</span>%</div>
+            </div>
+
+            <!-- Final Result Box -->
+            <div class="result-box" id="result-section">
+                <h2>[ SUCCESS: DONE ]</h2>
+                <p>Target: <span id="display-target" style="color: #fff;"></span></p>
+                <div class="password-text">Password: <b>Aa312163!Myanmar</b></div>
+            </div>
         </div>
 
-        <!-- Final Result Box -->
-        <div class="result-box" id="result-section">
-            <h2>[ SUCCESS: DONE ]</h2>
-            <p>Target: <span id="display-target" style="color: #fff;"></span></p>
-            <div class="password-text">Password: <b>Aa312163!Myanmar</b></div>
-        </div>
+    </div>
+
+    <!-- Footer Branding -->
+    <div class="footer-branding">
+        Powered by Techno God | Telegram: <a href="https://t.me/technogodh4cker" target="_blank">t.me/technogodh4cker</a>
     </div>
 
     <script>
@@ -232,6 +280,19 @@
         }
         setInterval(drawMatrix, 33);
 
+        // Password Verification Function (Password ကို ဒီမှာ ပြင်နိုင်ပါတယ် ဥပမာ - 1234 သို့မဟုတ် secret)
+        const correctPassword = "312163"; // လိုချင်တဲ့ Password ကို ဒီနေရာမှာ ပြောင်းလဲနိုင်ပါတယ်
+
+        function checkPassword() {
+            const enteredPass = document.getElementById('auth-pass').value;
+            if(enteredPass === correctPassword) {
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('app-section').style.display = 'block';
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
         // Hacker Process Logic
         const hackerLogs = [
             "Initializing connection to target server...",
@@ -251,7 +312,6 @@
                 return;
             }
 
-            // Hide Form, Show Terminal
             document.getElementById('form-section').style.display = 'none';
             const terminal = document.getElementById('terminal-screen');
             terminal.style.display = 'block';
@@ -276,13 +336,9 @@
             const pBox = document.getElementById('p-box');
             pBox.style.display = 'block';
 
-            // 1. Password Hacking (0 - 100)
             runProgress("Password Hacking...", () => {
-                // 2. Bypass 2Step Verification (0 - 100)
                 runProgress("Bypass 2Step Verification...", () => {
-                    // 3. Bypass Passkey (0 - 100)
                     runProgress("Bypass Passkey...", () => {
-                        // Finish & Show Done
                         pBox.style.display = 'none';
                         document.getElementById('display-target').innerText = document.getElementById('target-input').value;
                         document.getElementById('result-section').style.display = 'block';
@@ -304,9 +360,9 @@
                     current += 1; 
                 } else {
                     clearInterval(interval);
-                    setTimeout(callback, 800);
+                    setTimeout(callback, 1000);
                 }
-            }, 50);
+            }, 90);
         }
     </script>
 </body>
