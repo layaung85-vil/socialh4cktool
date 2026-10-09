@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail / Facebook / Telegram H4ck Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: #000;
+            color: #00FF00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Matrix Rain Canvas Background */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border: 2px solid #00FF00;
+            box-shadow: 0 0 20px #00FF00;
+            background: rgba(0, 10, 0, 0.85); /* Slightly transparent to see matrix rain */
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00FF00;
+            letter-spacing: 2px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #00FF00;
+            color: #00FF00;
+            font-size: 16px;
+            outline: none;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px #00FF00;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #00FF00;
+            color: #000;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            box-shadow: 0 0 10px #00FF00;
+        }
+
+        button:hover {
+            background: #000;
+            color: #00FF00;
+            border: 1px solid #00FF00;
+        }
+
+        #terminal-screen {
+            display: none;
+            text-align: left;
+            height: 350px;
+            overflow-y: hidden;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .progress-box {
+            margin-top: 15px;
+            display: none;
+            text-align: left;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background: #002200;
+            border: 1px solid #00FF00;
+            height: 20px;
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #00FF00;
+            transition: width 0.05s linear;
+            box-shadow: 0 0 10px #00FF00;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #00FF00;
+            background: #001100;
+            border-radius: 5px;
+        }
+
+        .result-box h2 {
+            color: #00FF00;
+            margin-bottom: 10px;
+            font-size: 20px;
+            text-shadow: 0 0 8px #00FF00;
+        }
+
+        .password-text {
+            font-size: 18px;
+            color: #fff;
+            background: #220000;
+            padding: 8px;
+            border: 1px solid #ff0000;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Matrix Rain Background Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <div class="container" id="main-container">
+        <h1>Gmail / Facebook / Telegram H4ck Tool</h1>
+        
+        <!-- Input Form -->
+        <div id="form-section">
+            <div class="input-group">
+                <label>Target Account (Gmail Address):</label>
+                <input type="text" id="target-input" placeholder="example@gmail.com">
+            </div>
+            <button onclick="startHack()">HACK</button>
+        </div>
+
+        <!-- Terminal & Progress Section -->
+        <div id="terminal-screen">
+            <div id="log-output"></div>
+        </div>
+
+        <div class="progress-box" id="p-box">
+            <span id="progress-title">Password Hacking...</span>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="p-bar"></div>
+            </div>
+            <div style="text-align: right; font-size: 12px; margin-top: 3px;"><span id="p-val">0</span>%</div>
+        </div>
+
+        <!-- Final Result Box -->
+        <div class="result-box" id="result-section">
+            <h2>[ SUCCESS: DONE ]</h2>
+            <p>Target: <span id="display-target" style="color: #fff;"></span></p>
+            <div class="password-text">Password: <b>Aa312163!Myanmar</b></div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix Rain Animation Script
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%+-/~{[|`]}';
+        const fontSize = 16;
+        let columns = canvas.width / fontSize;
+        let drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 33);
+
+        // Hacker Process Logic
+        const hackerLogs = [
+            "Initializing connection to target server...",
+            "Bypassing firewall security layers...",
+            "Injecting payload into authentication port 443...",
+            "Extracting SSL encryption certificates...",
+            "Decrypting master database hash keys...",
+            "Access granted to primary session cookies...",
+            "Hooking target API endpoints...",
+            "Intercepting active user tokens..."
+        ];
+
+        function startHack() {
+            const target = document.getElementById('target-input').value;
+            if(!target) {
+                alert("ကျေးဇူးပြု၍ Hack လိုသည့် Gmail Address ထည့်ပါ!");
+                return;
+            }
+
+            // Hide Form, Show Terminal
+            document.getElementById('form-section').style.display = 'none';
+            const terminal = document.getElementById('terminal-screen');
+            terminal.style.display = 'block';
+            
+            let logIndex = 0;
+            const logOutput = document.getElementById('log-output');
+
+            let logInterval = setInterval(() => {
+                if(logIndex < hackerLogs.length) {
+                    logOutput.innerHTML += `> ${hackerLogs[logIndex]}<br>`;
+                    terminal.scrollTop = terminal.scrollHeight;
+                    logIndex++;
+                } else {
+                    clearInterval(logInterval);
+                    setTimeout(startProgressSequence, 1000);
+                }
+            }, 500);
+        }
+
+        function startProgressSequence() {
+            document.getElementById('terminal-screen').style.display = 'none';
+            const pBox = document.getElementById('p-box');
+            pBox.style.display = 'block';
+
+            // 1. Password Hacking (0 - 100)
+            runProgress("Password Hacking...", () => {
+                // 2. Bypass 2Step Verification (0 - 100)
+                runProgress("Bypass 2Step Verification...", () => {
+                    // 3. Bypass Passkey (0 - 100)
+                    runProgress("Bypass Passkey...", () => {
+                        // Finish & Show Done
+                        pBox.style.display = 'none';
+                        document.getElementById('display-target').innerText = document.getElementById('target-input').value;
+                        document.getElementById('result-section').style.display = 'block';
+                    });
+                });
+            });
+        }
+
+        function runProgress(titleText, callback) {
+            document.getElementById('progress-title').innerText = titleText;
+            let bar = document.getElementById('p-bar');
+            let val = document.getElementById('p-val');
+            let current = 0;
+
+            let interval = setInterval(() => {
+                if (current <= 100) {
+                    bar.style.width = current + '%';
+                    val.innerText = current;
+                    current += 1; 
+                } else {
+                    clearInterval(interval);
+                    setTimeout(callback, 800);
+                }
+            }, 50);
+        }
+    </script>
+</body>
+</html>
